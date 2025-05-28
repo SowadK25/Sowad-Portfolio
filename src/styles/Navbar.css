@@ -1,0 +1,78 @@
+.navbar {
+  position: fixed; /* or sticky if you want it to scroll */
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: rgba(1, 1, 1, 0.25); /* translucent white */
+  border-radius: 1.5rem; /* rounded edges */
+  z-index: 10; /* above blur */
+  backdrop-filter: blur(10px); /* optional glass effect */
+}
+  
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.nav-links {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  max-width: 100%;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  padding: 0.8em 2em;
+  font-size: 1em;
+  letter-spacing: 0.15em;
+  color: white;
+  display: inline-block;
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+.nav-links li a:after {
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  background: gold;
+  transition: width 0.5s ease 0s, left 0.5s ease 0s;
+  width: 0;
+  font-weight: bolder;
+}
+
+.nav-links li a:hover:after {
+  width: 100%;
+  left: 0;
+}
+
+.nav-icon {
+  margin-right: 0.5em;
+  vertical-align: middle;
+  font-size: 1.1em;
+}
+
+@media screen and (max-width: 768px) {
+  .nav-links li a {
+    padding: 0.5em 1em;
+    font-size: 0.8em;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .nav-links li a {
+    padding: 0.4em 1em;
+    font-size: 0.7em;
+  }
+}

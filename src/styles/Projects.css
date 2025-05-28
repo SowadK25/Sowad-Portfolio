@@ -1,0 +1,151 @@
+/* Projects Section */
+.projects-section {
+    padding: 5rem 1rem;
+    text-align: center;
+    background: transparent;
+    z-index: 1;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .section-title {
+    font-size: 3em;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .project-swiper {
+    width: 100%;
+    max-width: 1000px;
+    padding: 2rem 0;
+  }
+  
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+  }
+  
+  /* Card Container */
+  .project-card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 500px;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: flex-end;
+    transition: transform 0.3s ease;
+  }
+  
+  .project-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  /* Background Image */
+  .card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    transition: transform 0.5s ease;
+  }
+  
+  /* Text Content */
+  .card-content {
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    width: 100%;
+    padding: 1.5rem;
+    border-radius: 0 0 1rem 1rem;
+    text-align: center;
+  }
+  
+  .project-title {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .project-description {
+    color: #ddd;
+    font-size: 1rem;
+  }
+  
+  /* Prevent clipping of partially visible cards */
+  .swiper-wrapper {
+    padding: 0 2rem;
+    box-sizing: content-box;
+  }
+  
+  .tech-stack {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .tech {
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: gold;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    border: 1px solid gold;
+    white-space: nowrap;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+  .tech:hover {
+    background: gold;
+    color: #000;
+  }
+
+  @media screen and (max-width: 768px) {
+    .section-title {
+      font-size: 2.5em;
+    }
+    .project-swiper {
+      width: 100vw;
+    }
+    .project-card {
+      max-width: 250px;
+      height: 350px;
+    }
+    .card-content{
+      text-align: left;
+      padding: 1rem;
+    }
+    .card-content h3{
+      font-size: 1.2rem;
+    }
+    .card-content p{
+      font-size: 0.8rem;
+    }
+    .tech-stack {
+      margin-top: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: start;
+      align-items: center;
+    }
+    .tech {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+    }
+  }
