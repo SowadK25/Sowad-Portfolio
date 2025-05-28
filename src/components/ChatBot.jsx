@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import '../styles/ChatBot.css';
 import { FaUserCircle } from 'react-icons/fa';
 import { GoogleGenAI } from '@google/genai';
-import { model, systemInstruction } from '../scripts/constants';
 import { RiRobot2Fill } from 'react-icons/ri';
 import { IoSend } from 'react-icons/io5';
 
@@ -10,7 +9,6 @@ const Chatbot = () => {
     const [chatHistory, setChatHistory] = useState([]);
     const [userInput, setUserInput] = useState('');
     const [isBotTyping, setIsBotTyping] = useState(false);
-    const [chatSession, setChatSession] = useState(null);
     const [error, setError] = useState(null);
 
     const messagesEndRef = useRef(null);
@@ -21,10 +19,6 @@ const Chatbot = () => {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
-
-    const ai = new GoogleGenAI({
-        apiKey: import.meta.env.VITE_GEMINI_API_KEY,
-    });
 
     // For handling the scroll to bottom when chat history updates
     useEffect(() => {
@@ -45,45 +39,21 @@ const Chatbot = () => {
 
     // Initialize the chat session when the component mounts
     useEffect(() => {
-        const initializeChat = async () => {
-            setIsBotTyping(true);
-            setError(null);
-            try {
-                if (!ai) throw new Error("Gemini AI client not initialized.");
-                const newChat = ai.chats.create({
-                    model: model,
-                    config: { systemInstruction: systemInstruction },
-                });
-                setChatSession(newChat);
-                const initialBotMessage = {
-                    id: `bot-init-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-                    sender: 'bot',
-                    text: "Hello! I'm Sowad's portfolio assistant. How can I help you learn more about him today?",
-                    timestamp: Date.now(),
-                };
-                hasScrolled.current = false;
-                setChatHistory([initialBotMessage]);
-            } catch (err) {
-                console.error("Failed to initialize chat session:", err);
-                setError("Could not start the chat session. Please ensure the API key is configured correctly and try refreshing.");
-                setChatHistory([{
-                    id: `error-init-${Date.now()}`,
-                    sender: 'bot',
-                    text: "Sorry, I'm having trouble connecting. Please check the setup and refresh.",
-                    timestamp: Date.now(),
-                }]);
-            } finally {
-                setIsBotTyping(false);
-            }
+        const initialBotMessage = {
+            id: `bot-init-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            sender: 'bot',
+            text: "Hello! I'm Sowad's portfolio assistant. How can I help you learn more about him today?",
+            timestamp: Date.now(),
         };
-        initializeChat();
+        hasScrolled.current = false;
+        setChatHistory([initialBotMessage]);
     }, []);
 
     // Handle sending messages
     const handleSendMessage = useCallback(async (e) => {
         if (e) e.preventDefault();
         const currentInput = userInput.trim();
-        if (!currentInput || isBotTyping || !chatSession) return;
+        if (!currentInput || isBotTyping) return;
 
         const userMessage = {
             id: `user-${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -100,21 +70,25 @@ const Chatbot = () => {
         setChatHistory(prev => [...prev, { id: botMessageId, sender: 'bot', text: '', timestamp: Date.now() }]);
 
         try {
-            const stream = await chatSession.sendMessageStream({ message: currentInput });
-            let currentBotText = '';
-            for await (const chunk of stream) {
-                const chunkText = chunk.text;
-                if (chunkText) {
-                    currentBotText += chunkText;
-                    setChatHistory(prev => prev.map(msg =>
-                        msg.id === botMessageId ? { ...msg, text: currentBotText } : msg
-                    ));
-                }
-            }
-            if (currentBotText === '') {
+            const response = await fetch('/api/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: currentInput,
+                    history: chatHistory.map(msg => ({
+                        role: msg.sender === 'user' ? 'user' : 'model',
+                        parts: [{ text: msg.text }],
+                    })),
+                }),
+            });
+
+            const data = await response.json();
+            if (data.reply) {
                 setChatHistory(prev => prev.map(msg =>
-                    msg.id === botMessageId ? { ...msg, text: "I'm processing that, one moment..." } : msg
+                    msg.id === botMessageId ? { ...msg, text: data.reply } : msg
                 ));
+            } else {
+                throw new Error(data.error || 'No reply');
             }
         } catch (err) {
             console.error("Error sending message to Gemini:", err);
@@ -170,7 +144,7 @@ const Chatbot = () => {
                             onChange={(e) => setUserInput(e.target.value)}
                             placeholder={isBotTyping ? "Waiting for response..." : "Ask about Sowad..."}
                             className="chat-input"
-                            disabled={isBotTyping || !chatSession}
+                            disabled={isBotTyping}
                             onKeyPress={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
                                     e.preventDefault();
@@ -178,7 +152,7 @@ const Chatbot = () => {
                                 }
                             }}
                         />
-                        <button type="submit" disabled={isBotTyping || !userInput.trim() || !chatSession} className="chat-send-button">
+                        <button type="submit" disabled={isBotTyping || !userInput.trim()} className="chat-send-button">
                             <IoSend className="send-icon" />
                         </button>
                     </form>
