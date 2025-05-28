@@ -81,7 +81,7 @@ const Chatbot = () => {
                     })),
                 }),
             });
-
+            console.log("Response from Gemini API:", response);
             const data = await response.json();
             if (data.reply) {
                 setChatHistory(prev => prev.map(msg =>
@@ -101,7 +101,7 @@ const Chatbot = () => {
             setIsBotTyping(false);
             setShouldRefocusInput(true);
         }
-    }, [userInput, isBotTyping, chatSession]);
+    }, [userInput, isBotTyping]);
 
     return (
         <div className="chatbot" id="chatbot">
