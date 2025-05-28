@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import '../styles/ChatBot.css';
 import { FaUserCircle } from 'react-icons/fa';
-import { GoogleGenAI } from '@google/genai';
 import { RiRobot2Fill } from 'react-icons/ri';
 import { IoSend } from 'react-icons/io5';
 
