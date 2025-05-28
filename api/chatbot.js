@@ -92,14 +92,10 @@ export default async function handler(req, res) {
   try {
     const { message, history } = req.body;
     const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const chat = ai
-      .getGenerativeModel({
-        model: model,
-        config: { systemInstruction: systemInstruction },
-      })
-      .startChat({
-        history: history || [],
-      });
+    const chat = ai.getGenerativeModel({ model: model }).startChat({
+      history: history || [],
+      systemInstruction: systemInstruction,
+    });
     const result = await chat.sendMessage(message);
     const response = await result.response.text();
 

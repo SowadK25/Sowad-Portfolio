@@ -6,6 +6,7 @@ import { IoSend } from 'react-icons/io5';
 
 const Chatbot = () => {
     const [chatHistory, setChatHistory] = useState([]);
+    const [backendChatHistory, setBackendChatHistory] = useState([]);
     const [userInput, setUserInput] = useState('');
     const [isBotTyping, setIsBotTyping] = useState(false);
     const [error, setError] = useState(null);
@@ -14,6 +15,8 @@ const Chatbot = () => {
     const inputRef = useRef(null);
     const [shouldRefocusInput, setShouldRefocusInput] = useState(false);
     const hasScrolled = useRef(false);
+
+    const initialGreeting = "Hello! I'm Sowad's portfolio assistant. How can I help you learn more about him today?"
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -41,7 +44,7 @@ const Chatbot = () => {
         const initialBotMessage = {
             id: `bot-init-${Date.now()}-${Math.random().toString(16).slice(2)}`,
             sender: 'bot',
-            text: "Hello! I'm Sowad's portfolio assistant. How can I help you learn more about him today?",
+            text: initialGreeting,
             timestamp: Date.now(),
         };
         hasScrolled.current = false;
@@ -61,12 +64,14 @@ const Chatbot = () => {
             timestamp: Date.now(),
         };
         setChatHistory(prev => [...prev, userMessage]);
+        setBackendChatHistory(prev => [...prev, userMessage]);
         setUserInput('');
         setIsBotTyping(true);
         setError(null);
 
         const botMessageId = `bot-${Date.now()}-${Math.random().toString(16).slice(2)}`;
         setChatHistory(prev => [...prev, { id: botMessageId, sender: 'bot', text: '', timestamp: Date.now() }]);
+        setBackendChatHistory(prev => [...prev, { id: botMessageId, sender: 'bot', text: '', timestamp: Date.now() }]);
 
         try {
             const response = await fetch('/api/chatbot', {
@@ -74,17 +79,21 @@ const Chatbot = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: currentInput,
-                    history: chatHistory.map(msg => ({
-                        role: msg.sender === 'user' ? 'user' : 'model',
-                        parts: [{ text: msg.text }],
-                    })),
+                    history: backendChatHistory
+                        .map(msg => ({
+                            role: msg.sender === 'user' ? 'user' : 'model',
+                            parts: [{ text: msg.text }],
+                        })),
                 }),
             });
-            console.log("Response from Gemini API:", response);
             const data = await response.json();
-            if (data.reply) {
+            console.log("Response from Gemini API:", response);
+            if (data.text) {
                 setChatHistory(prev => prev.map(msg =>
-                    msg.id === botMessageId ? { ...msg, text: data.reply } : msg
+                    msg.id === botMessageId ? { ...msg, text: data.text } : msg
+                ));
+                setBackendChatHistory(prev => prev.map(msg =>
+                    msg.id === botMessageId ? { ...msg, text: data.text } : msg
                 ));
             } else {
                 throw new Error(data.error || 'No reply');
@@ -94,6 +103,9 @@ const Chatbot = () => {
             const errorText = "Sorry, I encountered an issue trying to respond. Please try again.";
             setError(errorText);
             setChatHistory(prev => prev.map(msg =>
+                msg.id === botMessageId ? { ...msg, text: errorText } : msg
+            ));
+            setBackendChatHistory(prev => prev.map(msg =>
                 msg.id === botMessageId ? { ...msg, text: errorText } : msg
             ));
         } finally {
