@@ -6,7 +6,6 @@ import { IoSend } from 'react-icons/io5';
 
 const Chatbot = () => {
     const [chatHistory, setChatHistory] = useState([]);
-    const [backendChatHistory, setBackendChatHistory] = useState([]);
     const [userInput, setUserInput] = useState('');
     const [isBotTyping, setIsBotTyping] = useState(false);
     const [error, setError] = useState(null);
@@ -64,14 +63,12 @@ const Chatbot = () => {
             timestamp: Date.now(),
         };
         setChatHistory(prev => [...prev, userMessage]);
-        setBackendChatHistory(prev => [...prev, userMessage]);
         setUserInput('');
         setIsBotTyping(true);
         setError(null);
 
         const botMessageId = `bot-${Date.now()}-${Math.random().toString(16).slice(2)}`;
         setChatHistory(prev => [...prev, { id: botMessageId, sender: 'bot', text: '', timestamp: Date.now() }]);
-        setBackendChatHistory(prev => [...prev, { id: botMessageId, sender: 'bot', text: '', timestamp: Date.now() }]);
 
         try {
             const response = await fetch('/api/chatbot', {
@@ -79,7 +76,7 @@ const Chatbot = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: currentInput,
-                    history: backendChatHistory
+                    history: chatHistory
                         .map(msg => ({
                             role: msg.sender === 'user' ? 'user' : 'model',
                             parts: [{ text: msg.text }],
@@ -88,11 +85,9 @@ const Chatbot = () => {
             });
             const data = await response.json();
             console.log("Response from Gemini API:", response);
+            console.log("Data received:", data);
             if (data.text) {
                 setChatHistory(prev => prev.map(msg =>
-                    msg.id === botMessageId ? { ...msg, text: data.text } : msg
-                ));
-                setBackendChatHistory(prev => prev.map(msg =>
                     msg.id === botMessageId ? { ...msg, text: data.text } : msg
                 ));
             } else {
@@ -103,9 +98,6 @@ const Chatbot = () => {
             const errorText = "Sorry, I encountered an issue trying to respond. Please try again.";
             setError(errorText);
             setChatHistory(prev => prev.map(msg =>
-                msg.id === botMessageId ? { ...msg, text: errorText } : msg
-            ));
-            setBackendChatHistory(prev => prev.map(msg =>
                 msg.id === botMessageId ? { ...msg, text: errorText } : msg
             ));
         } finally {

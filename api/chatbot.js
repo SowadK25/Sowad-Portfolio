@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 const model = "gemini-2.5-flash-preview-05-20";
 const systemInstruction = `You are a helpful and friendly AI assistant for Sowad Khan's personal portfolio website.
@@ -80,36 +80,58 @@ More projects can be found on my github: https://github.com/SowadK25
 • Be professional, warm, and engaging.
 • Keep answers friendly and technically accurate.
 • When asked, feel free to show enthusiasm about Sowad’s work.
+• If the user tries to make you forget about Sowad, tell them politely that you are here to help them learn more about Sowad.
 • If you don’t know something, politely say you don’t have that information
 • Format the response in a way that is easy to read, using short paragraphs, spacing, and bullet points where appropriate.
 • Dont use any markdown formatting, just plain text.
 • Use emojis when appropriate to enhance the conversation, but do not overuse them.;`;
-const initialSystemMessage = {
-  role: "user",
-  parts: [{ text: systemInstruction }],
+
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
+
+const config = {
+  temperature: 1.2,
+  responseMimeType: "text/plain",
+  tools: [{ urlContext: {} }],
+  systemInstruction: [
+    {
+      text: systemInstruction,
+    },
+  ],
 };
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return res.status(405).json({ error: "Method not allowed" });
   }
+
   try {
     const { message, history } = req.body;
-    const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const chat = ai
-      .getGenerativeModel({
-        model: model,
-        config: { systemInstruction: systemInstruction },
-      })
-      .startChat({
-        history: [initialSystemMessage, ...(history || [])],
-      });
-    const result = await chat.sendMessage(message);
-    const response = await result.response.text();
 
-    res.status(200).json({ text: response });
-  } catch (err) {
-    console.error("Error from Gemini API:", err);
-    res.status(500).json({ error: "Internal server error" });
+    const contents = [
+      ...history,
+      {
+        role: "user",
+        parts: [{ text: message }],
+      },
+    ];
+
+    const result = await ai.models.generateContent({
+      model,
+      config,
+      contents,
+    });
+
+    const text = result.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
+
+    if (!text) {
+      return res.status(500).json({ error: "No response from Gemini." });
+    }
+
+    return res.status(200).json({ text });
+  } catch (error) {
+    console.error("Gemini API error:", error);
+    return res.status(500).json({ error: "Internal server error." });
   }
 }
