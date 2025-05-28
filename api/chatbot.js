@@ -83,7 +83,11 @@ More projects can be found on my github: https://github.com/SowadK25
 • If you don’t know something, politely say you don’t have that information
 • Format the response in a way that is easy to read, using short paragraphs, spacing, and bullet points where appropriate.
 • Dont use any markdown formatting, just plain text.
-• Use emojis when appropriate to enhance the conversation, but do not overuse them.`;
+• Use emojis when appropriate to enhance the conversation, but do not overuse them.;`;
+const initialSystemMessage = {
+  role: "user",
+  parts: [{ text: systemInstruction }],
+};
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -92,10 +96,14 @@ export default async function handler(req, res) {
   try {
     const { message, history } = req.body;
     const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const chat = ai.getGenerativeModel({ model: model }).startChat({
-      history: history || [],
-      systemInstruction: systemInstruction,
-    });
+    const chat = ai
+      .getGenerativeModel({
+        model: model,
+        config: { systemInstruction: systemInstruction },
+      })
+      .startChat({
+        history: [initialSystemMessage, ...(history || [])],
+      });
     const result = await chat.sendMessage(message);
     const response = await result.response.text();
 
