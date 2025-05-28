@@ -70,9 +70,9 @@ ul {
   }
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 500px) {
   .nav-links li a {
-    padding: 0.4em 1em;
-    font-size: 0.7em;
+    padding: 0.4em 0.7em;
+    font-size: 0.65em;
   }
 }

@@ -3,12 +3,14 @@ import '../styles/ChatBot.css';
 import { FaUserCircle } from 'react-icons/fa';
 import { RiRobot2Fill } from 'react-icons/ri';
 import { IoSend } from 'react-icons/io5';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const Chatbot = () => {
     const [chatHistory, setChatHistory] = useState([]);
     const [userInput, setUserInput] = useState('');
     const [isBotTyping, setIsBotTyping] = useState(false);
     const [error, setError] = useState(null);
+    const isMobile = useIsMobile();
 
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
@@ -23,20 +25,22 @@ const Chatbot = () => {
 
     // For handling the scroll to bottom when chat history updates
     useEffect(() => {
+        if (isMobile) return;
+
         if (hasScrolled.current) {
             scrollToBottom();
         } else {
             hasScrolled.current = true;
         }
-    }, [chatHistory]);
+    }, [chatHistory, isMobile]);
 
     // For refocusing the input field after sending a message
     useEffect(() => {
-        if (shouldRefocusInput) {
+        if (shouldRefocusInput && !isMobile) {
             inputRef.current?.focus();
             setShouldRefocusInput(false);
         }
-    }, [shouldRefocusInput]);
+    }, [shouldRefocusInput, isMobile]);
 
     // Initialize the chat session when the component mounts
     useEffect(() => {
@@ -84,8 +88,6 @@ const Chatbot = () => {
                 }),
             });
             const data = await response.json();
-            console.log("Response from Gemini API:", response);
-            console.log("Data received:", data);
             if (data.text) {
                 setChatHistory(prev => prev.map(msg =>
                     msg.id === botMessageId ? { ...msg, text: data.text } : msg
@@ -102,7 +104,7 @@ const Chatbot = () => {
             ));
         } finally {
             setIsBotTyping(false);
-            setShouldRefocusInput(true);
+            setShouldRefocusInput(!isMobile);
         }
     }, [userInput, isBotTyping]);
 
