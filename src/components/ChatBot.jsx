@@ -4,6 +4,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { RiRobot2Fill } from 'react-icons/ri';
 import { IoSend } from 'react-icons/io5';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { track } from "@vercel/analytics/react";
 
 const Chatbot = () => {
     const [chatHistory, setChatHistory] = useState([]);
@@ -60,6 +61,11 @@ const Chatbot = () => {
         const currentInput = userInput.trim();
         if (!currentInput || isBotTyping) return;
 
+        // Track the message sent on Vercel Analytics
+        track('chat_message_sent', {
+            message_length: currentInput.length,
+        });
+
         const userMessage = {
             id: `user-${Date.now()}-${Math.random().toString(16).slice(2)}`,
             sender: 'user',
@@ -89,6 +95,10 @@ const Chatbot = () => {
             });
             const data = await response.json();
             if (data.text) {
+                // Track the bot response on Vercel Analytics
+                track('chatbot_response', {
+                    response_length: data.text.length,
+                });
                 setChatHistory(prev => prev.map(msg =>
                     msg.id === botMessageId ? { ...msg, text: data.text } : msg
                 ));
