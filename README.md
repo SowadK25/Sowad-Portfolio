@@ -26,8 +26,7 @@ git add .
 git commit -m "Describe your changes"
 
 ### Push to GitHub:
-git push origin main
-# or: git push
+git push
 
 
 ## Deployment
