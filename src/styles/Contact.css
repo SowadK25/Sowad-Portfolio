@@ -9,7 +9,17 @@
   .contact-title {
     font-size: 3rem;
     color: #fff;
+    margin-bottom: 1rem;
+  }
+  
+  .contact-description {
+    font-size: 1.2rem;
+    color: #ddd;
     margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
   }
   
   .contact-cards {
@@ -37,6 +47,21 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  .contact-card:nth-child(1) { animation-delay: 0.1s; }
+  .contact-card:nth-child(2) { animation-delay: 0.2s; }
+  .contact-card:nth-child(3) { animation-delay: 0.3s; }
+  .contact-card:nth-child(4) { animation-delay: 0.4s; }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   .contact-card:hover {
@@ -47,7 +72,18 @@
   .contact-card .icon {
     font-size: 2rem;
     margin-bottom: 0.8rem;
+    transition: transform 0.3s ease, color 0.3s ease;
   }
+  
+  .contact-card:hover .icon {
+    transform: scale(1.1);
+  }
+  
+  /* Specific icon colors */
+  .contact-card:nth-child(1) .icon { color: #ea4335; } /* Email - red */
+  .contact-card:nth-child(2) .icon { color: #0077b5; } /* LinkedIn - blue */
+  .contact-card:nth-child(3) .icon { color: #111111; } /* GitHub - dark */
+  .contact-card:nth-child(4) .icon { color: #E4405F; } /* Instagram - pink */
   
   .contact-card .info h3 {
     margin: 0;
@@ -66,9 +102,24 @@
       font-size: 2.5rem;
     }
   
+    .contact-description {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+  
+    .contact-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 150px;
+      gap: 0.7rem;
+    }
+  
     .contact-card {
-      min-width: 225px;
-      height: 155px;
+      min-width: unset;
+      width: 100%;
+      height: 100%;
+      padding: 1.5rem;
+      overflow: hidden;
     }
 
     .contact-card .icon {
@@ -81,7 +132,7 @@
     }
   
     .contact-card .info p {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
     }
   }
   

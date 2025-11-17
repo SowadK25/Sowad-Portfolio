@@ -33,6 +33,9 @@ const Contact = () => {
     return (
         <section className="contact-section" id="contact">
             <h2 className="contact-title">Let's Connect</h2>
+            <p className="contact-description">
+                I'm always open to new opportunities and collaborations. Feel free to reach out through any of the platforms below!
+            </p>
             <div className="contact-cards">
                 {contacts.map((item, index) => (
                     <a

@@ -90,19 +90,6 @@
   50% { opacity: 0 }
 }
 
-@keyframes rollIn {
-  0% {
-    transform: translateX(1000px) rotate(270deg);
-  }
-  100% {
-    transform: translateX(0) rotate(0deg);
-  }
-}
-
-.img-crop {
-  animation: rollIn 1.2s ease-out forwards;
-}
-
 @media screen and (max-width: 1000px) {
   .landing-content {
       flex-direction: column;

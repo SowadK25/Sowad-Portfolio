@@ -13,7 +13,7 @@ const projects = [
         description: 'A collaborative app that helps groups of friends decide where to eat.',
         image: '/forkit.png',
         link: 'https://github.com/SowadK25/Fork-It',
-        techStack: ['Android', 'Kotlin', 'Firebase', "GCP"]
+        techStack: ['Android', 'Kotlin', 'Node.js', 'Firebase', "GCP"]
     },
     {
         title: 'Univibe',
@@ -21,13 +21,6 @@ const projects = [
         image: '/UnivibeLogo.png',
         link: 'https://github.com/SowadK25/Univibe',
         techStack: ['Android', 'Kotlin', 'Firebase', "GCP"]
-    },
-    {
-        title: 'Ilmi',
-        description: 'Currently in development - a gamified edtech platform designed to make learning Islamic knowledge engaging, modern, and personalized.',
-        image: '/ilmi.png',
-        link: null,
-        techStack: ['React Native', 'TypeScript', 'Supabase', "Node.js", "Express.js"]
     },
     {
         title: 'WlP4 Compiler',
@@ -43,6 +36,13 @@ const projects = [
         link: 'https://github.com/SowadK25/YelpCamp',
         techStack: ['Node.js', 'Express.js', 'MongoDB', 'EJS', 'Passport.js']
     },
+    {
+        title: 'Tales of Nuiryn',
+        description: 'A 3D action-adventure RPG game developed using Unity, featuring exploration, combat, and puzzle-solving in a fantasy world.',
+        image: '/Nuiryn.jpg',
+        link: 'https://github.com/CloseZad/GameJam2020-WON-AWARD-',
+        techStack: ['C#', 'Unity', 'Blender',]
+    },
 ];
 
 const Projects = () => {
@@ -53,7 +53,7 @@ const Projects = () => {
             </h2>
             <Swiper
                 modules={[Parallax, Pagination, Navigation]}
-                slidesPerView={1.9}
+                slidesPerView={2}
                 breakpoints={{
                     1024: {
                         slidesPerView: 1.9,
@@ -69,6 +69,7 @@ const Projects = () => {
                     },
                 }}
                 centeredSlides={true}
+                initialSlide={1}
                 grabCursor={true}
                 parallax={true}
                 pagination={{ clickable: true }}
@@ -86,7 +87,7 @@ const Projects = () => {
                                     className="card-bg"
                                 />
                                 <div className="card-content">
-                                    <h3 className="project-title" data-swiper-parallax="-200">
+                                    <h3 className="project-title" data-swiper-parallax="-100">
                                         {project.title}
                                     </h3>
                                     <p className="project-description" data-swiper-parallax="-100">
@@ -103,9 +104,6 @@ const Projects = () => {
                                                 {tech}
                                             </span>
                                         ))}
-                                        {/* <span className="tech">React</span>
-                                        <span className="tech">Firebase</span>
-                                        <span className="tech">Tailwind</span> */}
                                     </div>
                                 </div>
                             </div>
