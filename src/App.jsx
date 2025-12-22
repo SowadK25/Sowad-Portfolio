@@ -7,6 +7,7 @@ import Timeline from './components/Timeline'
 import Projects from './components/Projects'
 import Contact from './components/Contact'
 import ChatBot from './components/ChatBot'
+import Particles from './components/Particles'
 
 function App() {
   const [isBlurred, setIsBlurred] = useState(false)
@@ -28,6 +29,7 @@ function App() {
         <source src="/portfolio_background.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
+      <Particles />
       <div className={`overlay ${isBlurred ? "blurred" : ""}`} />
       <div className="content">
         <Navbar />
