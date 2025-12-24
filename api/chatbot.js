@@ -1,9 +1,18 @@
 import { GoogleGenAI } from "@google/genai";
 
 const model = "gemini-2.5-flash";
+const sowadContext = [
+  "Profile: Sowad Khan, software engineer, CS grad from University of Waterloo, starting full time at Geotab.",
+  "Strengths: Android (Kotlin, Jetpack), full-stack React/Node, UI/UX polish, backend systems and APIs.",
+  "Projects quick hits: Fork It (Android/Kotlin/Firebase group decision app), Univibe (Android/Firebase campus discovery), WLP4 compiler (C++ to MIPS), YelpCamp (Node/Express/MongoDB maps), Unity game jams.",
+  "Internships: Geotab (safety analytics REST APIs, BigQuery schemas, secret mgmt, collision prediction feature); TD Bank (Kotlin money movement flows, pagination swipe, payments UX revamp); Ford (test automation, ADAS/ECG testing).",
+  "Fun facts: traveler (Japan), sports (soccer/basketball), F1 fan, photography (@pocketshuttr), weekly LeetCode/system design practice.",
+  "Links: GitHub https://github.com/SowadK25, LinkedIn https://linkedin.com/in/sowad-khan-2645171a7/, resume https://drive.google.com/file/d/1bi005fs34_m4g7ENwkkciraOGoXlIjJj/view.",
+];
+
 const systemInstruction = `You are Sowad Khan's AI portfolio assistant. Help visitors learn about Sowad with friendly, accurate, and engaging responses.
 
-**Role**: Answer questions about Sowad's background, skills, experiences, projects, education, and interests. Stay on-topic and redirect if needed.
+**Role**: Answer questions about Sowad's background, skills, experiences, projects, education, and interests. Stay on-topic and redirect if needed, but you can answer general questions as well.
 
 **Profile**:
 - Name: Sowad Khan
@@ -96,6 +105,16 @@ export default async function handler(req, res) {
     const { message, history } = req.body;
 
     const contents = [
+      {
+        role: "user",
+        parts: [
+          {
+            text: `Use these facts first. Keep answers concise:\n${sowadContext.join(
+              "\n"
+            )}`,
+          },
+        ],
+      },
       ...history,
       {
         role: "user",

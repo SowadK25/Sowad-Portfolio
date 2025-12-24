@@ -6,22 +6,43 @@ import { IoSend } from 'react-icons/io5';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { track } from "@vercel/analytics/react";
 
+const suggestedPrompts = [
+    "What did Sowad build at Geotab?",
+    "Show me his Android projects",
+    "Why Fork It?",
+    "Tour me around the site",
+];
+
 const Chatbot = () => {
     const [chatHistory, setChatHistory] = useState([]);
     const [userInput, setUserInput] = useState('');
     const [isBotTyping, setIsBotTyping] = useState(false);
     const [error, setError] = useState(null);
+    const [autoScroll, setAutoScroll] = useState(true);
+    const [showPrompts, setShowPrompts] = useState(true);
     const isMobile = useIsMobile();
 
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
+    const scrollContainerRef = useRef(null);
     const [shouldRefocusInput, setShouldRefocusInput] = useState(false);
     const hasScrolled = useRef(false);
 
     const initialGreeting = "Hello! I'm Sowad's portfolio assistant. How can I help you learn more about him today?"
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        if (!autoScroll) return;
+        const el = scrollContainerRef.current;
+        if (el) {
+            el.scrollTop = el.scrollHeight;
+        }
+    };
+
+    const handleScroll = () => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+        const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+        setAutoScroll(distanceFromBottom < 120);
     };
 
     // For handling the scroll to bottom when chat history updates
@@ -33,7 +54,7 @@ const Chatbot = () => {
         } else {
             hasScrolled.current = true;
         }
-    }, [chatHistory, isMobile]);
+    }, [chatHistory, isMobile, autoScroll]);
 
     // For refocusing the input field after sending a message
     useEffect(() => {
@@ -56,9 +77,9 @@ const Chatbot = () => {
     }, []);
 
     // Handle sending messages
-    const handleSendMessage = useCallback(async (e) => {
+    const handleSendMessage = useCallback(async (e, overrideInput) => {
         if (e) e.preventDefault();
-        const currentInput = userInput.trim();
+        const currentInput = (overrideInput ?? userInput).trim();
         if (!currentInput || isBotTyping) return;
 
         // Track the message sent on Vercel Analytics
@@ -76,6 +97,7 @@ const Chatbot = () => {
         setUserInput('');
         setIsBotTyping(true);
         setError(null);
+        setShowPrompts(false);
 
         const botMessageId = `bot-${Date.now()}-${Math.random().toString(16).slice(2)}`;
         setChatHistory(prev => [...prev, { id: botMessageId, sender: 'bot', text: '', timestamp: Date.now() }]);
@@ -116,7 +138,21 @@ const Chatbot = () => {
             setIsBotTyping(false);
             setShouldRefocusInput(!isMobile);
         }
-    }, [userInput, isBotTyping]);
+    }, [userInput, isBotTyping, chatHistory, isMobile]);
+
+    const handleSuggested = (prompt) => {
+        if (prompt.toLowerCase().includes('tour')) {
+            // simple tour scroll
+            const ids = ['about', 'projects', 'chatbot', 'contact'];
+            ids.forEach((id, idx) => {
+                setTimeout(() => {
+                    const el = document.getElementById(id);
+                    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, idx * 2000);
+            });
+        }
+        handleSendMessage(null, prompt);
+    };
 
     return (
         <div className="chatbot" id="chatbot">
@@ -125,7 +161,7 @@ const Chatbot = () => {
                     <h1>Chat with Sowad's AI Assistant</h1>
                 </header>
 
-                <main className="chatbot-main">
+                <main className="chatbot-main" ref={scrollContainerRef} onScroll={handleScroll}>
                     {chatHistory.map((msg) => (
                         <div key={msg.id} className={`chat-message ${msg.sender === 'user' ? 'user' : 'bot'}`}>
                             {msg.sender === 'bot' && <div className="icon-wrapper"><RiRobot2Fill className="chat-icon bot-icon" /></div>}
@@ -171,7 +207,15 @@ const Chatbot = () => {
                             <IoSend className="send-icon" />
                         </button>
                     </form>
-                    {error && <p className="chat-error">{error}</p>}
+                    {showPrompts && (
+                        <div className="suggested-prompts" aria-label="Suggested prompts">
+                            {suggestedPrompts.map((prompt) => (
+                                <button key={prompt} className="prompt-chip" onClick={() => handleSuggested(prompt)} disabled={isBotTyping}>
+                                    {prompt}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </footer>
             </div>
         </div>

@@ -6,7 +6,7 @@ const roles = ['Developer', 'Traveler', 'Student', 'Photographer'];
 
 const currents = [
     'Currently: Vibing :)',
-    'Learning: Mobile photography and videography (check out my Instagram @pocketshuttr)',
+    'Learning: Mobile photography (Instagram @pocketshuttr)',
     'Practicing: Weekly LeetCode + system design drills',
     'Travel note: Plotting the next backpacking weekend',
 ];

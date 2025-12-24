@@ -26,6 +26,37 @@
   font-size: 0.6rem;
 }
 
+.suggested-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.6rem 0;
+  background: transparent;
+}
+
+.prompt-chip {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #1e293b;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: all 0.2s ease;
+}
+
+.prompt-chip:hover:not(:disabled) {
+  border-color: #3b82f6;
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.prompt-chip:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .chatbot-main {
   flex-grow: 1;
   padding: 1rem;
@@ -189,6 +220,16 @@
 
   .chatbot-header {
     font-size: 0.4rem;
+  }
+
+  .suggested-prompts {
+    padding: 0.6rem 0.75rem;
+    gap: 0.4rem;
+  }
+
+  .prompt-chip {
+    font-size: 0.82rem;
+    padding: 0.4rem 0.75rem;
   }
 
   .chat-input {
