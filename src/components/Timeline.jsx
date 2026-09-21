@@ -45,7 +45,7 @@ function Timeline() {
                     <h3 className="vertical-timeline-element-title">Test Automation Developer Intern</h3>
                     <h4 className="vertical-timeline-element-subtitle">Ford Motor Company</h4>
                     <p>
-                        My first internship was at Ford! I worked on the SYNC4 infotainment system, where I developed test automation frameworks for different ECU's.
+                        My first internship was at Ford! I worked on the SYNC4 infotainment system, where I developed test automation frameworks for different ECU's. My hardware era??
                     </p>
                 </VerticalTimelineElement>
 
@@ -65,7 +65,7 @@ function Timeline() {
                     <h3 className="vertical-timeline-element-title">Mobile Software Engineer Intern</h3>
                     <h4 className="vertical-timeline-element-subtitle">TD Bank</h4>
                     <p>
-                        Next, I worked 2 terms at TD Bank as a Mobile Software Engineer Intern. I worked on the Android TD app, where I primarily focused on payment systems like global transfers and CRA direct deposits.
+                        Next, 2 internships at TD Bank as a Mobile Software Engineer. I primarily worked on the payment systems in the Android TD app (I know your bank details but I wont tell anyone 🫢)
                     </p>
                 </VerticalTimelineElement>
 
@@ -85,7 +85,7 @@ function Timeline() {
                     <h3 className="vertical-timeline-element-title">Software Engineer Intern</h3>
                     <h4 className="vertical-timeline-element-subtitle">Geotab</h4>
                     <p>
-                        My most recent internships were at Geotab, where I worked on the MyGeotab web application. I devloped a new feature that allows drivers to view their driving history and performance metrics, and earn rewards for safe driving.
+                        Currently a SWE at Geotab on the safety team! I help fleet managers monitor their drivers and vehicles using copious amounts of data. As a member of safety I can assure you I also drive safe (doesn't mean not fast though 🫡)
                     </p>
                 </VerticalTimelineElement>
                 <VerticalTimelineElement

@@ -43,16 +43,39 @@ const Particles = () => {
                 }
 
                 // friction and drift
-                p.vx *= 0.97
-                p.vy *= 0.97
+                p.vx *= 0.985
+                p.vy *= 0.985
                 p.x += p.vx + 0.1
                 p.y += p.vy
 
-                // wrap around edges
-                if (p.x < 0) p.x = width
-                if (p.x > width) p.x = 0
-                if (p.y < 0) p.y = height
-                if (p.y > height) p.y = 0
+                // horizontal wrap with a small jitter and velocity reset
+                const jitter = 1.5
+                if (p.x < 0) {
+                    p.x = width - jitter
+                    p.vx = Math.abs(p.vx) * 0.6
+                }
+                if (p.x > width) {
+                    p.x = jitter
+                    p.vx = -Math.abs(p.vx) * 0.6
+                }
+
+                // vertical bounce to avoid top/bottom flicker
+                if (p.y < 0) {
+                    p.y = 0
+                    p.vy = Math.abs(p.vy) * 0.6
+                }
+                if (p.y > height) {
+                    p.y = height
+                    p.vy = -Math.abs(p.vy) * 0.6
+                }
+
+                // clamp velocities to prevent runaway speeds or stalls
+                const maxSpeed = 1.2
+                const minSpeed = 0.02
+                p.vx = Math.max(-maxSpeed, Math.min(maxSpeed, p.vx))
+                p.vy = Math.max(-maxSpeed, Math.min(maxSpeed, p.vy))
+                if (Math.abs(p.vx) < minSpeed) p.vx = Math.sign(p.vx || 1) * minSpeed
+                if (Math.abs(p.vy) < minSpeed) p.vy = Math.sign(p.vy || 1) * minSpeed
 
                 ctx.beginPath()
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)

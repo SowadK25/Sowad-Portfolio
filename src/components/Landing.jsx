@@ -6,9 +6,9 @@ const roles = ['Developer', 'Traveler', 'Student', 'Photographer'];
 
 const currents = [
     'Currently: Vibing :)',
-    'Learning: Mobile photography (Instagram @pocketshuttr)',
+    'Learning: Playing the guitar',
     'Practicing: Weekly LeetCode + system design drills',
-    'Travel note: Plotting the next backpacking weekend',
+    'Travel note: Plotting the next spontanous trip :)',
 ];
 
 function Landing() {
