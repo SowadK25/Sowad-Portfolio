@@ -9,6 +9,13 @@ import '../styles/Projects.css';
 
 const projects = [
     {
+        title: 'Overheard',
+        description: 'Turning social media noise into evidence-backed product decisions.',
+        image: '/overheard.png',
+        link: 'https://devpost.com/software/overheard-f43qhc',
+        techStack: ['React', 'Python', 'FastAPI', 'Supabase', 'Elevenlabs', "Elastic"]
+    },
+    {
         title: 'Fork It',
         description: 'A collaborative app that helps groups of friends decide where to eat.',
         image: '/forkit.png',
