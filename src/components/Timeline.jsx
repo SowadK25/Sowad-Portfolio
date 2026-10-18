@@ -71,7 +71,7 @@ function Timeline() {
 
                 <VerticalTimelineElement
                     className="vertical-timeline-element--work"
-                    date="January 2024"
+                    date="Now"
                     contentStyle={{
                         borderTop: '4px solid #21325e',
                         borderLeft: '4px solid #21325e',
@@ -82,10 +82,10 @@ function Timeline() {
                     iconStyle={{ background: '#53ba46', color: '#fff', boxShadow: '0 0 0 4px white' }}
                     icon={<a href="https://www.geotab.com/" target="_blank" rel="noopener noreferrer"><IconImage src="/geotab.png" alt="Geotab" className="timeline-icon" /></a>}
                 >
-                    <h3 className="vertical-timeline-element-title">Software Engineer Intern</h3>
+                    <h3 className="vertical-timeline-element-title">Software Engineer</h3>
                     <h4 className="vertical-timeline-element-subtitle">Geotab</h4>
                     <p>
-                        Currently a SWE at Geotab on the safety team! I help fleet managers monitor their drivers and vehicles using copious amounts of data. As a member of safety I can assure you I also drive safe (doesn't mean not fast though 🫡)
+                        Intern to FT SWE at Geotab on the safety team! I help fleet managers monitor their drivers and vehicles using copious amounts of data. As a member of safety I can assure you I also drive safe (doesn't mean not fast though 🫡)
                     </p>
                 </VerticalTimelineElement>
                 <VerticalTimelineElement
