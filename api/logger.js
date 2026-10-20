@@ -15,6 +15,16 @@ function readLocationHeader(req, name, fallback) {
   }
 }
 
+function readCoordinate(req, name, limit) {
+  const value = readLocationHeader(req, name, '');
+  if (!value.trim()) return null;
+
+  const coordinate = Number(value);
+  return Number.isFinite(coordinate) && Math.abs(coordinate) <= limit
+    ? coordinate
+    : null;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
 
@@ -26,6 +36,8 @@ export default async function handler(req, res) {
   const city = readLocationHeader(req, 'x-vercel-ip-city', 'Unknown City');
   const region = readLocationHeader(req, 'x-vercel-ip-country-region', 'Unknown Region');
   const country = readLocationHeader(req, 'x-vercel-ip-country', 'Unknown Country');
+  const latitude = readCoordinate(req, 'x-vercel-ip-latitude', 90);
+  const longitude = readCoordinate(req, 'x-vercel-ip-longitude', 180);
 
   console.log(`Visitor from: ${city}, ${region}, ${country}`);
 
@@ -43,6 +55,8 @@ export default async function handler(req, res) {
     city,
     region,
     country,
+    latitude,
+    longitude,
   };
 
   try {
