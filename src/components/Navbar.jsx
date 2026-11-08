@@ -31,7 +31,7 @@ function Navbar() {
                     </a>
                 </li>
                 <li>
-                    <a href="https://drive.google.com/file/d/1eqPBb6LRsEYyIXyQVEcgz0Azw1wLVSgo/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+                    <a href="https://drive.google.com/file/d/1G1xeGbkx7b9TPA6BnLPa7FFQamxcBzBo/view?usp=sharing" target="_blank" rel="noopener noreferrer">
                         <FaRegEnvelope className="nav-icon" />
                         RÉSUMÉ
                     </a>
